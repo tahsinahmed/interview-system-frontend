@@ -32,8 +32,8 @@
               <b-form-select v-model="form.interViewee" :options="interviewee" required></b-form-select>
             </b-form-group>
 
-            <b-form-group id="input-group-3" label="Interviewee:" label-for="input-3" label-align="left">
-              <b-form-select v-model="form.chosenInterviewer" :options="interviewer" multiple :select-size="4"></b-form-select>
+            <b-form-group id="input-group-3" label="Interviewer:" label-for="input-3" label-align="left">
+              <b-form-select v-model="form.chosenInterviewer" :options="interviewer" multiple :select-size="4" required></b-form-select>
               <div class="mt-3">Selected Interviewers: <strong>{{ form.chosenInterviewer.map(item => item['name']) }}</strong></div>
             </b-form-group>
 
@@ -122,10 +122,11 @@ export default class CreateInterview extends Vue {
   }
   onReset(event) {
     event.preventDefault()
-    // Reset our form values
-    this.form.versityName = ''
-    this.form.name = ''
-    this.form.experiencePeriod = ''
+    this.form.interviewType = null
+    this.form.chosenInterviewer = []
+    this.form.interViewee = null
+    this.form.interviewDate = null
+    this.form.phase = null
     this.show = false
     this.$nextTick(() => {
       this.show = true

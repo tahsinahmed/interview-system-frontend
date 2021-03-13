@@ -22,6 +22,7 @@
                   v-model="form.name"
                   type="text"
                   placeholder="Enter Interviewer Name"
+                  required
               ></b-form-input>
             </b-form-group>
 
@@ -80,38 +81,51 @@ export default class CreateInterviewer extends Vue {
   show = true
   onSubmit(event) {
     event.preventDefault()
-    /*alert(JSON.stringify(this.form))*/
-    const res = axios.post('http://127.0.0.1:8087/api/interviewer', this.form);
-    res.then(value => {
-      if (value.status === 200) {
-        this.$bvToast.toast(`Successfully Created`, {
-          title: 'Interviewee',
-          autoHideDelay: 5000,
-          variant: 'success',
-          appendToast: true
-        })
-        setTimeout(() => {
-          this.$router.push('/show-interviewer');
-        }, 3000)
-      }
-    }).catch((error) => {
-      this.$bvToast.toast(`Failed to create`, {
-        title: 'Interviewer',
-        autoHideDelay: 5000,
-        variant: 'danger',
-        appendToast: true
+    if (this.form.name.length > 20) {
+      this.showError('Interviewer Name cannot exceed 20 charecters')
+    } else if (this.form.experiencePeriod > 100) {
+      this.showError('Experience cannot exceed 100 years')
+    } else if (this.form.position.length > 30) {
+      this.showError('Position cannot exceed 30 characters')
+    }  else if (this.form.employeeId.length > 10) {
+      this.showError('Employee ID cannot exceed 10 characters')
+    } else {
+      const res = axios.post('http://127.0.0.1:8087/api/interviewer', this.form);
+      res.then(value => {
+        if (value.status === 200) {
+          this.$bvToast.toast(`Successfully Created`, {
+            title: 'Interviewee',
+            autoHideDelay: 5000,
+            variant: 'success',
+            appendToast: true
+          })
+          setTimeout(() => {
+            this.$router.push('/show-interviewer');
+          }, 3000)
+        }
+      }).catch((error) => {
+        this.showError('Failed to create')
       })
-    })
+    }
   }
   onReset(event) {
     event.preventDefault()
-    // Reset our form values
-    this.form.versityName = ''
+    this.form.position = ''
     this.form.name = ''
     this.form.experiencePeriod = ''
+    this.form.employeeId = ''
     this.show = false
     this.$nextTick(() => {
       this.show = true
+    })
+  }
+
+  showError(message) {
+    this.$bvToast.toast(message, {
+      title: 'Interviewer',
+      autoHideDelay: 5000,
+      variant: 'danger',
+      appendToast: true
     })
   }
 }

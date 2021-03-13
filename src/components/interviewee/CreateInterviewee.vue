@@ -22,6 +22,7 @@
                   v-model="form.name"
                   type="text"
                   placeholder="Enter Interviewee Name"
+                  required
               ></b-form-input>
             </b-form-group>
 
@@ -70,28 +71,30 @@ export default class CreateInterviewee extends Vue{
   show = true
   onSubmit(event) {
     event.preventDefault()
-    /*alert(JSON.stringify(this.form))*/
-    const res = axios.post('http://127.0.0.1:8087/api/interviewee', this.form);
-    res.then(value => {
-      if (value.status === 200) {
-        this.$bvToast.toast(`Successfully Created`, {
-          title: 'Interviewee',
-          autoHideDelay: 5000,
-          variant: 'success',
-          appendToast: true
-        })
-        setTimeout(() => {
-          this.$router.push('/show-interviewee');
-        }, 3000)
-      }
-    }).catch((error) => {
-      this.$bvToast.toast(`Failed to create`, {
-        title: 'Interviewee',
-        autoHideDelay: 5000,
-        variant: 'danger',
-        appendToast: true
+    if (this.form.name.length > 20) {
+      this.showError('Interviewee Name cannot exceed 20 charecters')
+    } else if (this.form.experiencePeriod > 100) {
+      this.showError('Experience cannot exceed 100 years')
+    } else if (this.form.versityName.length > 50) {
+      this.showError('University Name cannot exceed 30 characters')
+    } else {
+      const res = axios.post('http://127.0.0.1:8087/api/interviewee', this.form);
+      res.then(value => {
+        if (value.status === 200) {
+          this.$bvToast.toast(`Successfully Created`, {
+            title: 'Interviewee',
+            autoHideDelay: 5000,
+            variant: 'success',
+            appendToast: true
+          })
+          setTimeout(() => {
+            this.$router.push('/show-interviewee');
+          }, 3000)
+        }
+      }).catch((error) => {
+        this.showError('Failed to create')
       })
-    })
+    }
   }
   onReset(event) {
     event.preventDefault()
@@ -104,6 +107,16 @@ export default class CreateInterviewee extends Vue{
       this.show = true
     })
   }
+
+  showError(message) {
+    this.$bvToast.toast(message, {
+      title: 'Interviewee',
+      autoHideDelay: 5000,
+      variant: 'danger',
+      appendToast: true
+    })
+  }
+
 }
 </script>
 

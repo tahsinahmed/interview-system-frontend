@@ -22,6 +22,7 @@
                   v-model="form.name"
                   type="text"
                   placeholder="Enter Interviewer Name"
+                  required
               ></b-form-input>
             </b-form-group>
 
@@ -90,34 +91,40 @@ export default class EditInterviewer extends Vue{
   }
   onSubmit(event) {
     event.preventDefault()
-    const res = axios.put('http://localhost:8087/api/interviewer', this.form);
-    res.then(value => {
-      if (value.status === 200) {
-        this.$bvToast.toast(`Successfully Updated`, {
-          title: 'Interviewee',
-          autoHideDelay: 5000,
-          variant: 'success',
-          appendToast: true
-        })
-        setTimeout(() => {
-          this.$router.push('/show-interviewer');
-        }, 3000)
-      }
-    }).catch((error) => {
-      this.$bvToast.toast(`Failed to update`, {
-        title: 'Interviewee',
-        autoHideDelay: 5000,
-        variant: 'danger',
-        appendToast: true
+    if (this.form.name.length > 20) {
+      this.showError('Interviewer Name cannot exceed 20 charecters')
+    } else if (this.form.experiencePeriod > 100) {
+      this.showError('Experience cannot exceed 100 years')
+    } else if (this.form.position.length > 30) {
+      this.showError('Position cannot exceed 30 characters')
+    }  else if (this.form.employeeId.length > 10) {
+      this.showError('Employee ID cannot exceed 10 characters')
+    } else {
+      const res = axios.put('http://localhost:8087/api/interviewer', this.form);
+      res.then(value => {
+        if (value.status === 200) {
+          this.$bvToast.toast(`Successfully Updated`, {
+            title: 'Interviewee',
+            autoHideDelay: 5000,
+            variant: 'success',
+            appendToast: true
+          })
+          setTimeout(() => {
+            this.$router.push('/show-interviewer');
+          }, 3000)
+        }
+      }).catch((error) => {
+        this.showError('Failed to update')
       })
-    })
+    }
   }
   onReset(event) {
     event.preventDefault()
     // Reset our form values
-    this.form.versityName = ''
+    this.form.position = ''
     this.form.name = ''
     this.form.experiencePeriod = ''
+    this.form.employeeId = ''
     this.show = false
     this.$nextTick(() => {
       this.show = true
@@ -130,6 +137,15 @@ export default class EditInterviewer extends Vue{
     this.form.name = data.data.name
     this.form.experiencePeriod = data.data.experiencePeriod
     this.form.position = data.data.position
+  }
+
+  showError(message) {
+    this.$bvToast.toast(message, {
+      title: 'Interviewer',
+      autoHideDelay: 5000,
+      variant: 'danger',
+      appendToast: true
+    })
   }
 }
 </script>

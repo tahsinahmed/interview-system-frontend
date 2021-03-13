@@ -135,35 +135,41 @@ export default class SubmitResult extends Vue{
   }
   onSubmit(event) {
     event.preventDefault()
-    const res = axios.put('http://127.0.0.1:8087/api/interview', this.form);
-    res.then(value => {
-      if (value.status === 200) {
-        this.$bvToast.toast(`Successfully Saved`, {
-          title: 'Interviewee',
-          autoHideDelay: 5000,
-          variant: 'success',
-          appendToast: true
-        })
-        setTimeout(() => {
-          this.$router.push('/');
-        }, 3000)
+    if (this.form.score > 10) {
+      this.showError('Score cannot exceed 10')
+    } else {
+      const res = axios.put('http://127.0.0.1:8087/api/interview', this.form);
+      res.then(value => {
+        if (value.status === 200) {
+          this.$bvToast.toast(`Successfully Saved`, {
+            title: 'Interviewee',
+            autoHideDelay: 5000,
+            variant: 'success',
+            appendToast: true
+          })
+          setTimeout(() => {
+            this.$router.push('/');
+          }, 3000)
 
-      }
-    }).catch((error) => {
-      this.$bvToast.toast(`Failed to create`, {
-        title: 'Interviewee',
-        autoHideDelay: 5000,
-        variant: 'danger',
-        appendToast: true
+        }
+      }).catch((error) => {
+        this.showError('Failed to Submit')
       })
-    })
+    }
   }
   onReset(event) {
     event.preventDefault()
-    // Reset our form values
-    this.form.versityName = ''
-    this.form.name = ''
-    this.form.experiencePeriod = ''
+    if (this.$route.params.id.split('&')[1] === 'E') {
+      this.form.score = null
+      this.form.result = null
+      this.form.chosenInterviewer = []
+      this.form.interViewee = null
+      this.form.interviewDate = null
+      this.form.phase = null
+      this.form.interviewType = null
+    }
+    this.form.score = null
+    this.form.result = null
     this.show = false
     this.$nextTick(() => {
       this.show = true
@@ -195,6 +201,15 @@ export default class SubmitResult extends Vue{
         value: { id: item['id'], name: item['name'] },
         text: item['name']
       }
+    })
+  }
+
+  showError(message) {
+    this.$bvToast.toast(message, {
+      title: 'Interview',
+      autoHideDelay: 5000,
+      variant: 'danger',
+      appendToast: true
     })
   }
 }

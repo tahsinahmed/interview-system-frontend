@@ -22,6 +22,7 @@
                   v-model="form.name"
                   type="text"
                   placeholder="Enter Interviewee Name"
+                  required
               ></b-form-input>
             </b-form-group>
 
@@ -79,27 +80,30 @@ export default class EditInterviewee extends Vue{
   }
   onSubmit(event) {
     event.preventDefault()
-    const res = axios.put('http://localhost:8087/api/interviewee', this.form);
-    res.then(value => {
-      if (value.status === 200) {
-        this.$bvToast.toast(`Successfully Updated`, {
-          title: 'Interviewee',
-          autoHideDelay: 5000,
-          variant: 'success',
-          appendToast: true
-        })
-        setTimeout(() => {
-          this.$router.push('/show-interviewee');
-        }, 3000)
-      }
-    }).catch((error) => {
-      this.$bvToast.toast(`Failed to update`, {
-        title: 'Interviewee',
-        autoHideDelay: 5000,
-        variant: 'danger',
-        appendToast: true
+    if (this.form.name.length > 20) {
+      this.showError('Interviewee Name cannot exceed 20 charecters')
+    } else if (this.form.experiencePeriod > 100) {
+      this.showError('Experience cannot exceed 100 years')
+    } else if (this.form.versityName.length > 50) {
+      this.showError('University Name cannot exceed 30 characters')
+    } else {
+      const res = axios.put('http://localhost:8087/api/interviewee', this.form);
+      res.then(value => {
+        if (value.status === 200) {
+          this.$bvToast.toast(`Successfully Updated`, {
+            title: 'Interviewee',
+            autoHideDelay: 5000,
+            variant: 'success',
+            appendToast: true
+          })
+          setTimeout(() => {
+            this.$router.push('/show-interviewee');
+          }, 3000)
+        }
+      }).catch((error) => {
+        this.showError('Failed to update')
       })
-    })
+    }
   }
   onReset(event) {
     event.preventDefault()
@@ -119,6 +123,15 @@ export default class EditInterviewee extends Vue{
     this.form.name = data.data.name
     this.form.experiencePeriod = data.data.experiencePeriod
     this.form.intervieweeId = data.data.intervieweeId
+  }
+
+  showError(message) {
+    this.$bvToast.toast(message, {
+      title: 'Interviewee',
+      autoHideDelay: 5000,
+      variant: 'danger',
+      appendToast: true
+    })
   }
 }
 </script>
