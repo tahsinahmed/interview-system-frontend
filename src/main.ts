@@ -8,7 +8,9 @@ import SubmitResult from '@/components/Interview/SubmitResult.vue'
 import CreateInterviewee from '@/components/interviewee/CreateInterviewee.vue'
 import CreateInterviewer from '@/components/interviewer/CreateInterviewer.vue'
 import ShowInterviewer from '@/components/interviewer/ShowInterviewer.vue'
+import EditInterviewer from '@/components/interviewer/EditInterviewer.vue'
 import ShowInterviewee from '@/components/interviewee/ShowInterviewee.vue'
+import EditInterviewee from '@/components/interviewee/EditInterviewee.vue'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
@@ -23,6 +25,8 @@ const routes = [
   { path: '/show-interviewee', component: ShowInterviewee },
   { path: '/show-interviewer', component: ShowInterviewer },
   { path: '/update-interview/:id', component: SubmitResult },
+  { path: '/update-interviewee/:id', component: EditInterviewee },
+  { path: '/update-interviewer/:id', component: EditInterviewer },
 ]
 
 const router = new VueRouter({

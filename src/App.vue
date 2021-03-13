@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1 style="color: blue; text-decoration: underline">Reve Interview System</h1>
+    <h1 style="color: blue; text-decoration: underline"><a href="/">Reve Interview System</a></h1>
     <br>
     <router-view></router-view>
   </div>

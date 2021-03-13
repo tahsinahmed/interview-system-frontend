@@ -66,7 +66,13 @@
     <br>
     <div class="row">
       <div class="col-sm-10 offset-sm-1">
-        <b-table striped head-variant="dark" :filter="filter" :filter-included-fields="filterOn" bordered hover :items="interviewerList"></b-table>
+        <b-table striped head-variant="dark" :filter="filter" :filter-included-fields="filterOn" bordered hover :items="interviewerList" :fields="fields" :sort-by.sync="sortBy">
+          <template #cell(actions)="row">
+            <b-button size="sm" v-bind:to="'/update-interviewer/' + row.item.action.id">
+              Edit
+            </b-button>
+          </template>
+        </b-table>
       </div>
     </div>
   </div>
@@ -84,6 +90,15 @@ export default class ShowInterviewer extends Vue{
   sortDirection = 'asc'
   filterOn = []
   filter = null
+  sortBy = 'sl'
+  fields = [
+    { key: 'sl', sortable: true },
+    { key: 'interviewerName', sortable: true },
+    { key: 'employeeId', sortable: false },
+    { key: 'position', sortable: false },
+    { key: 'experiencePeriod', sortable: true },
+    { key: 'actions', label: 'Actions' }
+  ]
   async created() {
     try {
       const res = await axios.get('http://localhost:8087/api/interviewer');
@@ -94,6 +109,7 @@ export default class ShowInterviewer extends Vue{
           interviewerName: item['name'],
           position: item['position'],
           experiencePeriod: item['experiencePeriod'] + ' Yrs',
+          action: { id: item['id']}
         }
       });
     } catch (e) {

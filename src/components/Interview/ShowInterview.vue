@@ -72,7 +72,13 @@
       <div class="col-sm-10 offset-sm-1">
         <b-table striped head-variant="dark" :filter="filter" :filter-included-fields="filterOn" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" bordered hover :items="interviewList" responsive="sm">
           <template #cell(actions)="row">
-            <b-button v-if="row.item.action.res === null" size="sm" v-bind:to="'/update-interview/' + row.item.action.id">
+            <b-button v-if="row.item.action.res !== null" size="sm" v-bind:to="'/update-interview/' + row.item.action.id + '&R'">
+              Review Result
+            </b-button>&nbsp;&nbsp;
+            <b-button v-if="row.item.action.res === null" size="sm" v-bind:to="'/update-interview/' + row.item.action.id + '&E'">
+              Edit
+            </b-button>&nbsp;&nbsp;
+            <b-button v-if="row.item.action.res === null" size="sm" v-bind:to="'/update-interview/' + row.item.action.id + '&S  '">
               Submit Result
             </b-button>
           </template>
