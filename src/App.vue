@@ -1,20 +1,22 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <h1 style="color: blue; text-decoration: underline">Reve Interview System</h1>
+    <br>
+    <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+import ShowInterview from './components/Interview/ShowInterview.vue';
 
 @Component({
   components: {
-    HelloWorld,
+    HelloWorld: ShowInterview
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+}
 </script>
 
 <style>
